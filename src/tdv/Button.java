@@ -31,4 +31,9 @@ public class Button {
 	public Point getDimensions(){
 		return this.dimensions;
 	}
+	public void setSelected(boolean selected){
+		if(selected){
+			
+		}
+	}
 }

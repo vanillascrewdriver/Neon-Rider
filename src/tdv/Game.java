@@ -25,8 +25,7 @@ public class Game extends BasicGameState{
 		//Draw players
 		for(Player player : Player.getActivePlayers()){
 			if(player.isAlive()){
-				g.setColor(player.getColor());
-				g.drawImage(Sprites.getSprite(player.getPlayerNumber(), player.getDirection()), player.getPosition().x-1, player.getPosition().y-1);
+				g.drawImage(Sprites.getSprite(player.getPlayerNumber(), player.getDirection()), player.getPosition().x-1, player.getPosition().y-1, player.getColor());
 			}
 		}
 		//Draw info board
@@ -49,6 +48,17 @@ public class Game extends BasicGameState{
 			} else {
 				g.drawString("died", xPos + 80, yPos);
 			}
+		}
+		
+		g.setColor(Color.white);
+		int x = Board.getWidth() + 5;
+		int y = Board.getHeight() - 80;
+		g.drawString("Controls:", x, y);
+		switch(Storage.getNumberPlayers()){
+			case 4: {g.setColor(Player.getPlayer(3).getColor()); g.drawString("Player 4: IJKL", x, y + 60);};
+			case 3: {g.setColor(Player.getPlayer(2).getColor()); g.drawString("Player 3: Numpad 5123", x, y + 45);};
+			case 2: {g.setColor(Player.getPlayer(1).getColor()); g.drawString("Player 2: Arrows", x , y + 30);};
+			case 1: {g.setColor(Player.getPlayer(0).getColor()); g.drawString("Player 1: WASD", x, y + 15);};
 		}
 		
 		g.setColor(Color.white);

@@ -6,16 +6,12 @@ import org.newdawn.slick.SlickException;
 
 
 public class Sprites{
-	private static String[] colors = {"Red", "Blue", "Green", "Orange"};
 	private static HashMap<String, Image> buttons;
-	private static Image[] playerSprites;
+	private static Image playerSprite;
 	
 	@SuppressWarnings("serial")
 	public static void loadSprites() throws SlickException{
-		playerSprites = new Image[4];
-		for(int playerNumber = 0; playerNumber < 4; playerNumber++){
-			playerSprites[playerNumber] = new Image("/Sprites/" + colors[playerNumber] + "PlayerSprite.png");
-		}
+		playerSprite = new Image("/Sprites/PlayerSprite.png");
 		buttons = new HashMap<String, Image>(){{
 			put("start", 	new Image("/Sprites/StartButton.png"));
 			put("gallery", 	new Image("/Sprites/GalleryButton.png"));
@@ -31,8 +27,8 @@ public class Sprites{
 	}
 	
 	public static Image getSprite(int playerNumber, Direction direction){
-		playerSprites[playerNumber].setRotation(Direction.getAngle(direction));
-		return playerSprites[playerNumber];
+		playerSprite.setRotation(Direction.getAngle(direction));
+		return playerSprite;
 	}
 	public static Image getButton(String name){
 		return buttons.get(name);

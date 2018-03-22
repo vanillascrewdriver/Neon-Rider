@@ -28,21 +28,21 @@ public class Menu extends BasicGameState{
 		Action.setup();
 		SaveFile.setup();
 		
-		int x = Board.getWidth() / 2;
-		int y = Board.getHeight() / 5;
-		startButton = new Button(Sprites.getButton("start"), new Point(x, y * 1));
-		galleryButton = new Button(Sprites.getButton("gallery"), new Point(x, y * 2));
-		quitButton = new Button(Sprites.getButton("quit"), new Point(x, y * 3));
+		int x = Board.getWidth() / 4;
+		int y = Board.getHeight() / 10;
+		startButton = new Button(Sprites.getButton("start"), new Point(x * 1, y));
+		galleryButton = new Button(Sprites.getButton("gallery"), new Point(x * 2, y));
+		quitButton = new Button(Sprites.getButton("quit"), new Point(x * 3, y));
 		
 		resetScoreButton = new Button(Sprites.getButton("resetscore"), new Point(Board.getWidth() / 6, Board.getHeight() * 3 / 4));
 		
-		x = Board.getWidth() / 10;
+		x = Board.getWidth() / 20;
 		y = Board.getHeight() / 6;
 		numberButtons = new Button[4][3];
 		for(int num = 1; num <= 4; num++){
-			numberButtons[num - 1][0] = new Button(Sprites.getButton(Integer.toString(num)), new Point(x * 7, y * num));
-			numberButtons[num - 1][1] = new Button(Sprites.getButton("ai"), new Point(x * 8, y * num));
-			numberButtons[num - 1][2] = new Button(Sprites.getButton("human"), new Point(x * 10, y * num));
+			numberButtons[num - 1][0] = new Button(Sprites.getButton(Integer.toString(num)), new Point(x * 15 - 10, y * num + y));
+			numberButtons[num - 1][1] = new Button(Sprites.getButton("ai"), new Point(x * 16, y * num + y));
+			numberButtons[num - 1][2] = new Button(Sprites.getButton("human"), new Point(x * 20, y * num + y));
 		}
 
 		mouse = new Circle(0, 0, 1);
@@ -55,28 +55,46 @@ public class Menu extends BasicGameState{
 		drawButton(g, quitButton);
 		drawButton(g, resetScoreButton);
 		for(int num = 0; num < 4; num++){
-			drawButton(g, numberButtons[num][0]);
+			if(Storage.getNumberPlayers() == num + 1){
+				drawButton(g, numberButtons[num][0], true);
+			} else {
+				drawButton(g, numberButtons[num][0]);
+			}
 		}
 		for(int num = 0; num < Storage.getNumberPlayers(); num++){
-			for(int button = 1; button < 3; button++){
-				drawButton(g, numberButtons[num][button]);
+			if(Player.getPlayer(num).isHuman()){
+				drawButton(g, numberButtons[num][1]);
+				drawButton(g, numberButtons[num][2], true);
+			} else {
+				drawButton(g, numberButtons[num][1], true);
+				drawButton(g, numberButtons[num][2]);
 			}
 		}
 		
 		g.setColor(Color.white);
-		g.drawString("Scores: ", Storage.getBoardWidth() / 6 - 10, Storage.getBoardHeight() / 2);
+		g.setFont(Fonts.getFont(40));
+		g.drawString("Scores: ", Storage.getBoardWidth() / 6 - 10, Storage.getBoardHeight() / 4);
 		for(Player player : Player.getActivePlayers()){
 			int xPos = Storage.getBoardWidth() / 6 - 10;
-			int yPos = Storage.getBoardHeight() / 2 + 20 + 20 * player.getPlayerNumber();
+			int yPos = Storage.getBoardHeight() / 4 + (g.getFont().getHeight(null)) * (player.getPlayerNumber() + 1);
 			g.setColor(player.getColor());
 			g.drawString("Player " + Integer.toString(player.getPlayerNumber() + 1), xPos, yPos);
 			g.setColor(Color.white);
-			g.drawString(": " + Integer.toString(player.getScore()), xPos + 75, yPos);
+			g.drawString(":" + Integer.toString(player.getScore()), xPos + g.getFont().getWidth("Player  "), yPos);
 		}
 	}
 	
 	public static void drawButton(Graphics g, Button button){
 		g.drawImage(button.getImage(), button.getPosition().x, button.getPosition().y);
+	}
+	public static void drawButton(Graphics g, Button button, Boolean selected){
+		Color color;
+		if(selected){
+			color = Color.darkGray;
+		} else {
+			color = Color.white;
+		}
+		g.drawImage(button.getImage(), button.getPosition().x, button.getPosition().y, color);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
@@ -116,7 +134,7 @@ public class Menu extends BasicGameState{
 				if(mouse.intersects(numberButtons[num][1].getShape())){
 					Player.getPlayer(num).isHuman(false);
 				}
-				if(mouse.intersects(numberButtons[num][1].getShape())){
+				if(mouse.intersects(numberButtons[num][2].getShape())){
 					Player.getPlayer(num).isHuman(true);
 				}
 			}

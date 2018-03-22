@@ -20,8 +20,7 @@ public class Pregame extends BasicGameState{
 		g.drawLine(Storage.getBoardWidth(), 0, Storage.getBoardWidth(), Storage.getBoardHeight());
 		//Draw players
 		for(Player player : Player.getActivePlayers()){
-			g.setColor(player.getColor());
-			g.drawImage(Sprites.getSprite(player.getPlayerNumber(), player.getDirection()), player.getPosition().x, player.getPosition().y);
+			g.drawImage(Sprites.getSprite(player.getPlayerNumber(), player.getDirection()), player.getPosition().x, player.getPosition().y, player.getColor());
 		}
 		//Draw info board
 		g.setColor(Color.white);
@@ -51,6 +50,17 @@ public class Pregame extends BasicGameState{
 			g.drawString("Player " + Integer.toString(player.getPlayerNumber() + 1), xPos, yPos);
 			g.setColor(Color.white);
 			g.drawString(": " + Integer.toString(player.getScore()), xPos + 75, yPos);
+		}
+		
+		g.setColor(Color.white);
+		int x = Board.getWidth() + 5;
+		int y = Board.getHeight() - 80;
+		g.drawString("Controls:", x, y);
+		switch(Storage.getNumberPlayers()){
+			case 4: {g.setColor(Player.getPlayer(3).getColor()); g.drawString("Player 4: IJKL", x, y + 60);};
+			case 3: {g.setColor(Player.getPlayer(2).getColor()); g.drawString("Player 3: Numpad 5123", x, y + 45);};
+			case 2: {g.setColor(Player.getPlayer(1).getColor()); g.drawString("Player 2: Arrows", x , y + 30);};
+			case 1: {g.setColor(Player.getPlayer(0).getColor()); g.drawString("Player 1: WASD", x, y + 15);};
 		}
 		
 		if(timer){

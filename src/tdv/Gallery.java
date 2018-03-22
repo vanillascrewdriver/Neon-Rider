@@ -13,6 +13,7 @@ public class Gallery extends BasicGameState{
 	private static int elapsedTime, totalTime;
 	private static int currentActionNumber;
 	private static int gameNumber;
+	private static int pause;
 	
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
@@ -21,8 +22,18 @@ public class Gallery extends BasicGameState{
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		sbg.getState(2).render(gc, sbg, g);
+			
+		int x = Board.getWidth() + 5;
+		int y = Board.getHeight() - 80;
+		g.setColor(Color.black);
+		g.fillRect(x, y, Storage.getSideBarWidth(), 100);
 		g.setColor(Color.white);
-		g.drawString(Integer.toString(gameNumber + 1) + " / " + Integer.toString(SaveFile.getNumberGames()), Board.getWidth() + 5, Board.getHeight() - 20);
+		g.drawString(Integer.toString(gameNumber + 1) + " / " + Integer.toString(SaveFile.getNumberGames()), Board.getWidth() + Storage.getSideBarWidth() - 70, Board.getHeight() - 20);
+		g.drawString("Controls: ", x, y);
+		g.drawString("Next:   Right Arrow", x, y + 15);
+		g.drawString("Prev:   Left Arrow", x , y + 30);
+		g.drawString("Delete: Delete", x, y + 45);
+		g.drawString("Back:   Escape", x, y + 60);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
@@ -33,13 +44,13 @@ public class Gallery extends BasicGameState{
 			switch(action){
 				case "next" : {
 					reset(); 
-					gameNumber = Math.min(gameNumber + 1, SaveFile.getNumberGames() - 1); 
+					gameNumber = (gameNumber + 1) % SaveFile.getNumberGames(); 
 					SaveFile.loadGame(gameNumber);
 					break;
 					}
 				case "previous" : {
 					reset(); 
-					gameNumber = Math.max(gameNumber - 1, 0); 
+					gameNumber = (gameNumber - 1 + SaveFile.getNumberGames()) % SaveFile.getNumberGames(); 
 					SaveFile.loadGame(gameNumber);
 					break;
 					}
@@ -83,8 +94,11 @@ public class Gallery extends BasicGameState{
 			numAlive += player.isAlive() ? 1 : 0;
 		}
 		if(numAlive == 0){
-			SaveFile.loadGame(gameNumber);
-			reset();
+			pause -= delta;
+			if(pause < 0){
+				SaveFile.loadGame(gameNumber);
+				reset();
+			}
 		}
 	}
 	
@@ -92,6 +106,7 @@ public class Gallery extends BasicGameState{
 		elapsedTime = 0;
 		totalTime = 0;
 		currentActionNumber = 0;
+		pause = Storage.getEndWait();
 	}
 	
 	public int getID() {
