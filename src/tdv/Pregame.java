@@ -10,11 +10,6 @@ public class Pregame extends BasicGameState{
 	
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
-		Sprites.loadSprites();
-		Player.setup();
-		Storage.setup();
-		Board.setup();
-		Line.reset();
 		elapsedTime = 0;
 		timer = false;
 	}
@@ -47,6 +42,17 @@ public class Pregame extends BasicGameState{
 			}
 		}
 		
+		g.setColor(Color.white);
+		g.drawString("Scores: ", Storage.getBoardWidth() + 5, Storage.getBoardHeight() / 2);
+		for(Player player : Player.getActivePlayers()){
+			int xPos = Storage.getBoardWidth() + 5;
+			int yPos = Storage.getBoardHeight() / 2 + 20 + 20 * player.getPlayerNumber();
+			g.setColor(player.getColor());
+			g.drawString("Player " + Integer.toString(player.getPlayerNumber() + 1), xPos, yPos);
+			g.setColor(Color.white);
+			g.drawString(": " + Integer.toString(player.getScore()), xPos + 75, yPos);
+		}
+		
 		if(timer){
 			g.setColor(Color.white);
 			g.drawString(Integer.toString((Storage.getStartWait() - elapsedTime) / 1000 + 1), Board.getWidth() / 2, Board.getHeight() / 2);
@@ -56,7 +62,7 @@ public class Pregame extends BasicGameState{
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
 		Input input = gc.getInput();
-		Controller.Action action = Controller.checkInput(input);
+		Action action = Controller.checkInput(input);
 		if(action != null) {
 			action.getPlayer().isReady(true);
 		}

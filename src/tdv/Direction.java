@@ -35,6 +35,26 @@ public enum Direction {
 		}
 	}
 	
+	public static String toString(Direction direction){
+		switch(direction){
+			case UP: return "UP";
+			case DOWN: return "DOWN";
+			case LEFT: return "LEFT";
+			case RIGHT: return "RIGHT";
+			default: return "NONE";
+		}
+	}
+	
+	public static Direction parseDir(String s){
+		switch(s){
+			case "UP": return UP;
+			case "DOWN": return DOWN;
+			case "LEFT": return LEFT;
+			case "RIGHT": return RIGHT;
+			default: return null;
+		}
+	}
+	
 	public static Direction[] getDirections(){
 		return new Direction[] {UP, DOWN, LEFT, RIGHT};
 	}

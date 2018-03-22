@@ -5,7 +5,7 @@ import org.newdawn.slick.state.*;
 
 public class Game extends BasicGameState{
 	
-	private static int elapsedTime;
+	private static int elapsedTime, totalTime;
 	
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
@@ -50,20 +50,34 @@ public class Game extends BasicGameState{
 				g.drawString("died", xPos + 80, yPos);
 			}
 		}
+		
+		g.setColor(Color.white);
+		g.drawString("Scores: ", Storage.getBoardWidth() + 5, Storage.getBoardHeight() / 2);
+		for(Player player : Player.getActivePlayers()){
+			int xPos = Storage.getBoardWidth() + 5;
+			int yPos = Storage.getBoardHeight() / 2 + 20 + 20 * player.getPlayerNumber();
+			g.setColor(player.getColor());
+			g.drawString("Player " + Integer.toString(player.getPlayerNumber() + 1), xPos, yPos);
+			g.setColor(Color.white);
+			g.drawString(": " + Integer.toString(player.getScore()), xPos + 75, yPos);
+		}
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
+		totalTime += delta;
 		elapsedTime += delta;
 		int forward = elapsedTime / Storage.getSpeed();
 		elapsedTime %= Storage.getSpeed();
 		
 		Input input = gc.getInput();
-		Controller.Action action = Controller.checkInput(input);
+		Action action = Controller.checkInput(input);
 		if(action != null) {
+			action.setTime(totalTime);
 			if((Direction.getDirectionVector(action.getPlayer().getDirection()).x + Direction.getDirectionVector(action.getDirection()).x) % 2 != 0){
 				action.getPlayer().setDirection(action.getDirection());
 				Line.newTempLine(action.getPlayer(), action.getPlayer().getPosition());
+				Action.addAction(action);
 			}
 		}
 		
@@ -82,10 +96,15 @@ public class Game extends BasicGameState{
 			numAlive += player.isAlive() ? 1 : 0;
 		}
 		if(numAlive == 0){
+			SaveFile.saveGame();
 			sbg.enterState(3);
 		}
 	}
 	
+	public static void reset(){
+		elapsedTime = 0;
+		totalTime = 0;
+	}
 	
 	public int getID() {
 		return 2;

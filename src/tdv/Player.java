@@ -7,13 +7,16 @@ import org.newdawn.slick.Color;
 
 public class Player {
 	private static Player[] players;
+	private static boolean scoreLock;
 	private int playerNumber;
 	private Point position, startPosition;
 	private Direction direction, startDirection;
 	private Color color;
 	private boolean ready;
 	private boolean alive;
+	private boolean isHuman;
 	private Player killer;
+	private int score;
 	
 	
 	public static void setup(){
@@ -27,6 +30,12 @@ public class Player {
 	public static void reset(){
 		for(int playerNumber = 0; playerNumber < 4; playerNumber++){
 			players[playerNumber].resetPlayer();
+		}
+	}
+	
+	public static void resetScores(){
+		for(int playerNumber = 0; playerNumber < 4; playerNumber++){
+			players[playerNumber].score = 0;
 		}
 	}
 	
@@ -53,6 +62,7 @@ public class Player {
 		this.startDirection = Storage.getStartDirection(playerNumber);
 		this.color = Storage.getColor(playerNumber);
 		this.ready = false;
+		this.isHuman = true;
 	}
 	
 	public int getPlayerNumber(){
@@ -70,15 +80,25 @@ public class Player {
 	public Player getKiller(){
 		return this.killer;
 	}
+	public int getScore(){
+		return this.score;
+	}
 	public boolean isReady(){
 		return this.ready;
 	}
 	public boolean isAlive(){
 		return this.alive;
 	}
+	public boolean isHuman(){
+		return this.isHuman;
+	}
 	
 	public void setDirection(Direction direction){
 		this.direction = direction;
+	}
+	
+	public void addScore(int score){
+		this.score += score;
 	}
 	
 	public void isReady(boolean ready) {
@@ -86,6 +106,9 @@ public class Player {
 	}
 	public void isAlive(boolean alive){
 		this.alive = alive;
+	}
+	public void isHuman(boolean isHuman){
+		this.isHuman = isHuman;
 	}
 	
 	public void forward(){
@@ -105,7 +128,10 @@ public class Player {
 		this.killer = null;
 	}
 	
-	public enum KeyDirection{
-		UP, DOWN, LEFT, RIGHT;
+	public static void scoreLock(boolean lock){
+		scoreLock = lock;
+	}
+	public static boolean scoreLock(){
+		return scoreLock;
 	}
 }

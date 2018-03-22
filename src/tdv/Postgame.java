@@ -63,7 +63,7 @@ public class Postgame extends BasicGameState{
 			Player.reset();
 			Line.reset();
 			elapsedTime = 0;
-			sbg.enterState(1);
+			sbg.enterState(0);
 		}
 	}	
 	

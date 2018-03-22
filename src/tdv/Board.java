@@ -33,14 +33,25 @@ public class Board {
 	
 	public static void update(){
 		for(Player player : Player.getActivePlayers()){
-			int x = player.getPosition().x;
-			int y = player.getPosition().y;
-			if((x < 0) || (x >= width) || (y < 0) || (y >= height)){
-				player.kill(Player.getPlayer(4));
-			} else if(board[y][x] != 4){
-				player.kill(Player.getPlayer(board[y][x])); 
-			} else {
-				board[y][x] = player.getPlayerNumber();
+			if(player.isAlive()){
+				int x = player.getPosition().x;
+				int y = player.getPosition().y;
+				if((x < 0) || (x >= width) || (y < 0) || (y >= height)){
+					player.kill(Player.getPlayer(4));
+				} else if(board[y][x] != 4){
+					player.kill(Player.getPlayer(board[y][x])); 
+					int score = -1;
+					for(Player player2 : Player.getActivePlayers()){
+						if(!player2.isAlive()){
+							score += 1;
+						}
+					}
+					if(!Player.scoreLock()){
+						player.addScore(score);
+					}
+				} else {
+					board[y][x] = player.getPlayerNumber();
+				}
 			}
 		}
 	}
