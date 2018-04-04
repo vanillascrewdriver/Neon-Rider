@@ -7,3 +7,9 @@ Neon Rider.zip
 
 Other stuff
 -Figure it out yourself
+
+To Do:
+-Comment
+-AI
+-Pretty
+-Settings.ini
