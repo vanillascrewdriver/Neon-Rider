@@ -82,12 +82,14 @@ public class Game extends BasicGameState{
 		
 		Input input = gc.getInput();
 		Action action = Controller.checkInput(input);
-		if(action != null) {
-			action.setTime(totalTime);
-			if((Direction.getDirectionVector(action.getPlayer().getDirection()).x + Direction.getDirectionVector(action.getDirection()).x) % 2 != 0){
-				action.getPlayer().setDirection(action.getDirection());
-				Line.newTempLine(action.getPlayer(), action.getPlayer().getPosition());
-				Action.addAction(action);
+		doAction(action);
+		
+		if(forward > 0) {
+			for(Player player : Player.getActivePlayers()) {
+				if(!player.isHuman()) {
+					action = player.aiMove();
+					doAction(action);
+				}
 			}
 		}
 		
@@ -108,6 +110,17 @@ public class Game extends BasicGameState{
 		if(numAlive == 0){
 			SaveFile.saveGame();
 			sbg.enterState(3);
+		}
+	}
+	
+	public static void doAction(Action action) {
+		if(action != null && action.getDirection() != null) {
+			action.setTime(totalTime);
+			if((Direction.getDirectionVector(action.getPlayer().getDirection()).x + Direction.getDirectionVector(action.getDirection()).x) % 2 != 0){
+				action.getPlayer().setDirection(action.getDirection());
+				Line.newTempLine(action.getPlayer(), action.getPlayer().getPosition());
+				Action.addAction(action);
+			}
 		}
 	}
 	

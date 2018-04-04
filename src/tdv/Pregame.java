@@ -79,6 +79,9 @@ public class Pregame extends BasicGameState{
 		
 		boolean ready = true;
 		for(Player player: Player.getActivePlayers()) {
+			if(!player.isHuman()) {
+				player.isReady(true);
+			}
 			ready &= player.isReady();
 		}
 		if(ready) {

@@ -28,6 +28,9 @@ public class Board {
 		return height;
 	}
 	public static int getValue(int x, int y){
+		if(x < 0 || x >= width || y < 0 || y >= height) {
+			return -1;
+		}
 		return board[y][x];
 	}
 	
@@ -36,10 +39,10 @@ public class Board {
 			if(player.isAlive()){
 				int x = player.getPosition().x;
 				int y = player.getPosition().y;
-				if((x < 0) || (x >= width) || (y < 0) || (y >= height)){
+				if(getValue(x, y) == -1){
 					player.kill(Player.getPlayer(4));
-				} else if(board[y][x] != 4){
-					player.kill(Player.getPlayer(board[y][x])); 
+				} else if(getValue(x, y) != 4){
+					player.kill(Player.getPlayer(getValue(x, y))); 
 					int score = -1;
 					for(Player player2 : Player.getActivePlayers()){
 						if(!player2.isAlive()){

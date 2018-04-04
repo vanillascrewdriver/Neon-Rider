@@ -58,4 +58,8 @@ public enum Direction {
 	public static Direction[] getDirections(){
 		return new Direction[] {UP, DOWN, LEFT, RIGHT};
 	}
+	
+	public static Point addDirection(Point point, Direction direction) {
+		return new Point(point.x + Direction.getDirectionVector(direction).x, point.y + Direction.getDirectionVector(direction).y);
+	}
 }
